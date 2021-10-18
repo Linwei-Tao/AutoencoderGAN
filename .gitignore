@@ -12,14 +12,12 @@ __pycache__/
 # PyCharm project settings
 .idea/
 
-# Model log files
-logs/
-
 # macOS-related
 .DS_Store
 
 # model weights
-/logs/*.pt
+*.pt
 
 # datasets
 /data/
+
