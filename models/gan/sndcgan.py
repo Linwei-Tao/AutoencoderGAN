@@ -143,6 +143,9 @@ class D_SNDCGAN(BaseDiscriminator):
         #     nn.LeakyReLU(0.1, inplace=True)
         # )
 
+        self.register_buffer("mean", torch.tensor([0.4914, 0.4822, 0.4465]).view(1, 3, 1, 1))
+        self.register_buffer("std", torch.tensor([0.247, 0.243, 0.261]).view(1, 3, 1, 1))
+
         if not disable_sn:
             for m in self.modules():
                 if isinstance(m, nn.Conv2d):
@@ -156,6 +159,8 @@ class D_SNDCGAN(BaseDiscriminator):
 
     def penultimate(self, input, return_feature_maps):
         input = input * 2. - 1.
+
+        # input = (input - self.mean) / self.std
         feature_maps = []
         output = input
         for block in self.blocks:

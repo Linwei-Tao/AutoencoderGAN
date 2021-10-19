@@ -185,8 +185,7 @@ def train(P, opt, train_fn, models, optimizers, train_loader, logger):
         for i in range(opt['n_critic']):
             images, labels = next(train_loader)
             images = images.cuda()
-            gen_images, latent_samples = _sample_generator(generator, images.size(0),
-                                           enable_grad=False)
+            gen_images, latent_samples = _sample_generator(generator, images.size(0), enable_grad=False)
 
             d_loss, aux = train_fn["D"](P, discriminator, opt, images, gen_images, generator, loss_fn)
             loss = d_loss + aux['penalty']

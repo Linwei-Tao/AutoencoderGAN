@@ -66,20 +66,22 @@ def loss_D_fn(P, D, options, images, gen_images, G, loss_fn):
 
     gen_real1 = G(real1)
     gen_real2 = G(real2)
-    gen_real1 = gen_real1.detach()
-    gen_real2 = gen_real2.detach()
-    mse_loss_on_img = loss_fn['mse'](gen_real1, aug_images[:N]) + loss_fn['mse'](gen_real2, aug_images[N:2*N])
+    # gen_real1 = gen_real1.detach()
+    # gen_real2 = gen_real2.detach()
+    # mse_loss_on_img = loss_fn['mse'](gen_real1, aug_images[:N]) + loss_fn['mse'](gen_real2, aug_images[N:2*N])
     # laploss_loss_on_img = loss_fn['laploss'](gen_real1, aug_images[:N]) + loss_fn['laploss'](gen_real2, aug_images[N:2*N])
     # perceptual_loss_on_img = loss_fn['perceptual'](gen_real1, aug_images[:N]) + loss_fn['perceptual'](gen_real2, aug_images[N:2*N])
     #compare generated real samples and original samples
     cat_gen_images = torch.cat([gen_real1, gen_real2], dim=0)
     d_gen_real, d_gen_real_aux, gen_real_feature_maps = D(cat_gen_images, projection=True, return_feature_maps=True)
-    d_gen_real1, d_gen_real2 = d_gen_real[:N], d_gen_real[N:2 * N]
-    d_gen_real1_loss = F.relu(1. + d_gen_real1, inplace=True).mean() + F.relu(1. - d_real, inplace=True).mean()
-    d_gen_real2_loss = F.relu(1. + d_gen_real2, inplace=True).mean() + F.relu(1. - d_real, inplace=True).mean()
+    # d_gen_real1, d_gen_real2 = d_gen_real[:N], d_gen_real[N:2 * N]
+    # d_gen_real1_loss = F.relu(1. + d_gen_real1, inplace=True).mean() + F.relu(1. - d_real, inplace=True).mean()
+    # d_gen_real2_loss = F.relu(1. + d_gen_real2, inplace=True).mean() + F.relu(1. - d_real, inplace=True).mean()
 
-    perceptual_loss_on_img = torch.tensor([F.l1_loss(gen_fm[:N], real_fm[:N]) + F.l1_loss(gen_fm[N:2*N], real_fm[N:2*N]) for gen_fm, real_fm in zip(gen_real_feature_maps, real_feature_maps)]).sum()
-    mse_loss_on_z = loss_fn['mse'](d_gen_real_aux['projection'][:N], real1) + loss_fn['mse'](d_gen_real_aux['projection'][N:2 * N], real2)
+    perceptual_loss_on_img = torch.tensor([F.mse_loss(gen_fm[:N], real_fm[:N]) \
+                                           + F.mse_loss(gen_fm[N:2*N], real_fm[N:2*N]) \
+                                           for gen_fm, real_fm in zip(gen_real_feature_maps, real_feature_maps)]).sum()
+    # mse_loss_on_z = loss_fn['mse'](d_gen_real_aux['projection'][:N], real1) + loss_fn['mse'](d_gen_real_aux['projection'][N:2 * N], real2)
 
 
     # return simclr_loss + P.lbd_a * sup_loss + P.D_view_constrain * mse_loss_on_img, {
