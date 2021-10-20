@@ -15,6 +15,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
+import copy
 
 import torch.multiprocessing as mp
 import torch.distributed as dist
@@ -130,7 +131,7 @@ def _sample_generator(G, num_samples, enable_grad=True):
 def get_options_dict(dataset=gin.REQUIRED,
                      loss=gin.REQUIRED,
                      batch_size=64, fid_size=10000,
-                     max_steps=200000, warmup=0, n_critic=1,
+                     max_steps=200000, warmup=0, n_critic=5,
                      lr=2e-4, lr_d=None, beta=(.5, .999),
                      lbd=10., lbd2=10.):
     if lr_d is None:
@@ -146,6 +147,10 @@ def get_options_dict(dataset=gin.REQUIRED,
         "lbd": lbd, "lbd2": lbd2
     }
 
+def get_feature_extractor(D):
+    fe = copy.deepcopy(D)
+    set_grad(fe, False)
+    return fe
 
 def train(P, opt, train_fn, models, optimizers, train_loader, logger):
     generator, discriminator = models
@@ -181,13 +186,14 @@ def train(P, opt, train_fn, models, optimizers, train_loader, logger):
         # Essential for training w/ multiple DDP models
         set_grad(generator, False)
         set_grad(discriminator, True)
-
+        fe = get_feature_extractor(discriminator)
         for i in range(opt['n_critic']):
             images, labels = next(train_loader)
             images = images.cuda()
             gen_images, latent_samples = _sample_generator(generator, images.size(0), enable_grad=False)
 
-            d_loss, aux = train_fn["D"](P, discriminator, opt, images, gen_images, generator, loss_fn)
+
+            d_loss, aux = train_fn["D"](P, discriminator, opt, images, gen_images, generator, loss_fn, fe)
             loss = d_loss + aux['penalty']
 
             opt_D.zero_grad()

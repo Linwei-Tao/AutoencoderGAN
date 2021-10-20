@@ -1,3 +1,5 @@
+import copy
+
 import torch
 import torch.nn.functional as F
 
@@ -32,7 +34,8 @@ def supcon_fake(out1, out2, others, temperature, distributed=False):
     return d_loss
 
 
-def loss_D_fn(P, D, options, images, gen_images, G, loss_fn):
+
+def loss_D_fn(P, D, options, images, gen_images, G, loss_fn, fe):
     assert images.size(0) == gen_images.size(0)
     gen_images = gen_images.detach()
     N = images.size(0)
@@ -73,7 +76,7 @@ def loss_D_fn(P, D, options, images, gen_images, G, loss_fn):
     # perceptual_loss_on_img = loss_fn['perceptual'](gen_real1, aug_images[:N]) + loss_fn['perceptual'](gen_real2, aug_images[N:2*N])
     #compare generated real samples and original samples
     cat_gen_images = torch.cat([gen_real1, gen_real2], dim=0)
-    d_gen_real, d_gen_real_aux, gen_real_feature_maps = D(cat_gen_images, projection=True, return_feature_maps=True)
+    d_gen_real, d_gen_real_aux, gen_real_feature_maps = fe(cat_gen_images, projection=True, return_feature_maps=True)
     # d_gen_real1, d_gen_real2 = d_gen_real[:N], d_gen_real[N:2 * N]
     # d_gen_real1_loss = F.relu(1. + d_gen_real1, inplace=True).mean() + F.relu(1. - d_real, inplace=True).mean()
     # d_gen_real2_loss = F.relu(1. + d_gen_real2, inplace=True).mean() + F.relu(1. - d_real, inplace=True).mean()

@@ -1,0 +1,110 @@
+[2021-10-20 00:30:35.241403] G_SNDCGAN(
+  (linear): Linear(in_features=128, out_features=8192, bias=True)
+  (norm_init): SyncBatchNorm(8192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (main): Sequential(
+    (0): ConvTranspose2d(512, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1))
+    (1): SyncBatchNorm(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): ConvTranspose2d(256, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1))
+    (4): SyncBatchNorm(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (5): ReLU(inplace=True)
+    (6): ConvTranspose2d(128, 64, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1))
+    (7): SyncBatchNorm(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (8): ReLU(inplace=True)
+    (9): ConvTranspose2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+    (10): Tanh()
+  )
+)
+[2021-10-20 00:30:35.241551] D_SNDCGAN(
+  (linear): TinyDiscriminator(
+    (l1): Linear(in_features=8192, out_features=512, bias=True)
+    (l2): Linear(in_features=512, out_features=1, bias=True)
+  )
+  (projection): Sequential(
+    (0): Linear(in_features=8192, out_features=512, bias=True)
+    (1): LeakyReLU(negative_slope=0.1, inplace=True)
+    (2): Linear(in_features=512, out_features=128, bias=True)
+  )
+  (projection2): Sequential(
+    (0): Linear(in_features=8192, out_features=512, bias=True)
+    (1): LeakyReLU(negative_slope=0.1, inplace=True)
+    (2): Linear(in_features=512, out_features=128, bias=True)
+  )
+  (blocks): ModuleList(
+    (0): Sequential(
+      (0): Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+    )
+    (1): Sequential(
+      (0): Conv2d(64, 128, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (3): LeakyReLU(negative_slope=0.1, inplace=True)
+    )
+    (2): Sequential(
+      (0): Conv2d(128, 256, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (3): LeakyReLU(negative_slope=0.1, inplace=True)
+    )
+    (3): Sequential(
+      (0): Conv2d(256, 512, kernel_size=(4, 4), stride=(2, 2), padding=(1, 1))
+      (1): LeakyReLU(negative_slope=0.1, inplace=True)
+      (2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (3): LeakyReLU(negative_slope=0.1, inplace=True)
+    )
+  )
+)
+[2021-10-20 00:30:35.241826] # Params - G: 3828739, D: 18568961
+[2021-10-20 00:30:35.241838] {'dataset': 'cifar10', 'batch_size': 512, 'fid_size': 10000, 'loss': 'nonsat', 'max_steps': 200000, 'warmup': 3000, 'n_critic': 1, 'lr': 0.0002, 'lr_d': 0.0002, 'beta': (0.5, 0.999), 'lbd': 10.0, 'lbd2': 10.0}
+Steps 1 (./logs/gan/c10_b512/sndcgan/sphereContraD_DViewConstrain1.0_DDis0.0_GZConstrain0.0/6092)
+[2021-10-20 00:30:54.729740] [Steps      50] [G 0.693] [D 12.751]
+[2021-10-20 00:31:10.815149] [Steps     100] [G 0.692] [D 12.222]
+[2021-10-20 00:31:27.061018] [Steps     150] [G 0.691] [D 11.971]
+[2021-10-20 00:31:42.935011] [Steps     200] [G 0.692] [D 11.600]
+[2021-10-20 00:31:58.913567] [Steps     250] [G 0.679] [D 11.626]
+[2021-10-20 00:32:14.812379] [Steps     300] [G 0.708] [D 11.260]
+[2021-10-20 00:32:30.804596] [Steps     350] [G 0.710] [D 11.088]
+[2021-10-20 00:32:46.690858] [Steps     400] [G 0.698] [D 11.169]
+[2021-10-20 00:33:02.671380] [Steps     450] [G 0.710] [D 10.643]
+[2021-10-20 00:33:18.584374] [Steps     500] [G 0.685] [D 10.614]
+[2021-10-20 00:33:34.606369] [Steps     550] [G 0.715] [D 10.813]
+[2021-10-20 00:33:50.487586] [Steps     600] [G 0.696] [D 11.099]
+[2021-10-20 00:34:06.414219] [Steps     650] [G 0.701] [D 10.540]
+[2021-10-20 00:34:22.245135] [Steps     700] [G 0.701] [D 11.005]
+[2021-10-20 00:34:38.166695] [Steps     750] [G 0.696] [D 10.660]
+[2021-10-20 00:34:53.989548] [Steps     800] [G 0.693] [D 10.490]
+[2021-10-20 00:35:09.920550] [Steps     850] [G 0.696] [D 10.245]
+[2021-10-20 00:35:25.754640] [Steps     900] [G 0.695] [D 10.263]
+[2021-10-20 00:35:41.686932] [Steps     950] [G 0.688] [D 10.289]
+[2021-10-20 00:35:57.518573] [Steps    1000] [G 0.696] [D 10.073]
+[2021-10-20 00:36:13.436542] [Steps    1050] [G 0.693] [D 10.393]
+[2021-10-20 00:36:29.266924] [Steps    1100] [G 0.692] [D 10.683]
+[2021-10-20 00:36:45.220510] [Steps    1150] [G 0.705] [D 10.265]
+[2021-10-20 00:37:01.093005] [Steps    1200] [G 0.705] [D 10.204]
+[2021-10-20 00:37:17.030806] [Steps    1250] [G 0.705] [D 10.108]
+[2021-10-20 00:37:32.873885] [Steps    1300] [G 0.694] [D 9.814]
+[2021-10-20 00:37:48.799696] [Steps    1350] [G 0.698] [D 10.481]
+[2021-10-20 00:38:04.647136] [Steps    1400] [G 0.695] [D 9.775]
+[2021-10-20 00:38:20.573714] [Steps    1450] [G 0.691] [D 9.976]
+[2021-10-20 00:38:36.415472] [Steps    1500] [G 0.697] [D 10.100]
+[2021-10-20 00:38:52.337275] [Steps    1550] [G 0.697] [D 10.015]
+[2021-10-20 00:39:08.179427] [Steps    1600] [G 0.692] [D 9.725]
+[2021-10-20 00:39:24.114065] [Steps    1650] [G 0.693] [D 9.880]
+[2021-10-20 00:39:40.025420] [Steps    1700] [G 0.695] [D 9.636]
+[2021-10-20 00:39:56.029800] [Steps    1750] [G 0.701] [D 9.833]
+[2021-10-20 00:40:11.951320] [Steps    1800] [G 0.695] [D 9.764]
+[2021-10-20 00:40:27.983776] [Steps    1850] [G 0.697] [D 9.898]
+[2021-10-20 00:40:43.902032] [Steps    1900] [G 0.698] [D 9.588]
+[2021-10-20 00:40:59.914781] [Steps    1950] [G 0.704] [D 9.506]
+[2021-10-20 00:41:15.837774] [Steps    2000] [G 0.696] [D 9.747]
+Steps 2001 (./logs/gan/c10_b512/sndcgan/sphereContraD_DViewConstrain1.0_DDis0.0_GZConstrain0.0/6092)
+[2021-10-20 00:42:13.901346] [Steps    2050] [G 0.694] [D 9.736]
+[2021-10-20 00:42:29.862143] [Steps    2100] [G 0.697] [D 9.462]
+[2021-10-20 00:42:45.914219] [Steps    2150] [G 0.701] [D 9.313]
+[2021-10-20 00:43:02.498198] [Steps    2200] [G 0.694] [D 9.354]
+[2021-10-20 00:43:19.015304] [Steps    2250] [G 0.695] [D 9.450]
+[2021-10-20 00:43:35.670345] [Steps    2300] [G 0.697] [D 9.720]
+[2021-10-20 00:43:52.133446] [Steps    2350] [G 0.700] [D 9.365]
+[2021-10-20 00:44:08.753342] [Steps    2400] [G 0.694] [D 9.006]
+[2021-10-20 00:44:26.088663] [Steps    2450] [G 0.693] [D 8.698]
